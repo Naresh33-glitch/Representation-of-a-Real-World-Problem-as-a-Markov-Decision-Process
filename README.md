@@ -3,11 +3,13 @@
 
 ## Aim
 
-Write your aim here.
+To represent a real-world smart vacuum cleaning robot problem as a Markov Decision Process (MDP) by defining its states, actions, transition probabilities, reward function, and implementing the model using Python dictionaries.
+
 
 Example:
 
-> To identify a real-world sequential decision-making problem and represent it formally as a Markov Decision Process by defining its states, actions, rewards, transitions, and Python representation.
+
+A smart vacuum robot starts from its charging station, moves to a dirty area, cleans it, avoids obstacles if encountered, and finally returns after completing the cleaning task. The robot learns to choose actions that maximize the total reward while minimizing unnecessary movements and collisions.
 
 ---
 
@@ -15,9 +17,7 @@ Example:
 
 ### Problem Description
 
-Write your answer here.
-
-Describe the real-world application that you selected.
+A smart vacuum cleaning robot cleans a small room. It starts from the charging station, moves around to clean dirty areas, avoids obstacles, and returns to the charging station after finishing. The robot receives positive rewards for cleaning and returning safely, while hitting an obstacle results in a negative reward. This can be modeled as a Markov Decision Process (MDP).
 
 
 ---
@@ -52,10 +52,11 @@ Example format:
 
 ```text
 S = {
-    State 1,
-    State 2,
-    State 3,
-    ...
+    Charging Station,
+    Dirty Area,
+    Clean Area,
+    Obstacle,
+    Task Complete
 }
 ```
 
@@ -65,17 +66,17 @@ S = {
 
 ## Sample State
 
-Write your answer here.
+
 
 A sample state is one specific example from the state space.
-
-
-
+```
+Dirty Area
+```
 ---
 
 ## Action Space
 
-Write your answer here.
+
 
 The action space should list all possible actions available to the agent.
 
@@ -83,10 +84,10 @@ Example format:
 
 ```text
 A = {
-    Action 1,
-    Action 2,
-    Action 3,
-    ...
+    Move,
+    Clean,
+    Avoid,
+    Return
 }
 ```
 
@@ -95,17 +96,30 @@ A = {
 
 ## Sample Action
 
-Write your answer here.
 
 A sample action is one action selected from the action space.
-
+```
+Clean
+```
 
 
 ---
 
 ## Transition Probability
 
-Write your answer here.
+```
+P(s' | s, a)
+
+Charging Station --Move--> Dirty Area (1.0)
+
+Dirty Area --Clean--> Clean Area (0.9)
+
+Dirty Area --Move--> Obstacle (0.1)
+
+Obstacle --Avoid--> Dirty Area (1.0)
+
+Clean Area --Return--> Task Complete (1.0)
+```
 
 The transition probability explains how the environment moves from one state to another after an action is taken.
 
@@ -124,25 +138,34 @@ This means:
 
 ## Reward Function
 
-Write your answer here.
 
 The reward function defines the feedback received by the agent after taking an action.
+```
+R(s, a, s')
 
+Charging Station → Dirty Area = -1
+
+Dirty Area → Clean Area = +10
+
+Dirty Area → Obstacle = -10
+
+Obstacle → Dirty Area = -2
+
+Clean Area → Task Complete = +20
+```
 General form:
 
-$$
-R(s,a,s')
-$$
-
-
+```
+R(s,a,s′)
+```
 
 ---
 
 ## Graphical Representation
 
-Write your answer here.
 
-Draw the MDP graph.
+
+
 
 The graph should include:
 
@@ -151,34 +174,87 @@ The graph should include:
 3. Rewards on transitions.
 4. Transition probabilities if applicable.
 
+<img width="1508" height="704" alt="MDP" src="https://github.com/user-attachments/assets/1c2e10a6-1f5a-4066-977d-144e0efbb00b" />
 
 ---
 
 ## Python Representation
 
-Write your code here.
-
-Use Python dictionaries to represent the MDP.
-
-
 ```python
 # MDP Representation using Python
-# print("Name:       ")
-# print("Register Number:     ")
+# States
+# MDP Representation as a Dictionary
 
+mdp = {
+    "states": {
+        0: "Charging Station",
+        1: "Dirty Area",
+        2: "Clean Area",
+        3: "Obstacle",
+        4: "Task Complete"
+    },
+
+    "actions": {
+        0: "Move",
+        1: "Clean",
+        2: "Avoid",
+        3: "Return"
+    },
+
+    "transitions": {
+        ("Charging Station", "Move"): {
+            "next_state": "Dirty Area",
+            "probability": 1.0
+        },
+        ("Dirty Area", "Clean"): {
+            "next_state": "Clean Area",
+            "probability": 0.9
+        },
+        ("Dirty Area", "Move"): {
+            "next_state": "Obstacle",
+            "probability": 0.1
+        },
+        ("Obstacle", "Avoid"): {
+            "next_state": "Dirty Area",
+            "probability": 1.0
+        },
+        ("Clean Area", "Return"): {
+            "next_state": "Task Complete",
+            "probability": 1.0
+        }
+    },
+
+    "rewards": {
+        ("Charging Station", "Move", "Dirty Area"): -1,
+        ("Dirty Area", "Clean", "Clean Area"): 10,
+        ("Dirty Area", "Move", "Obstacle"): -10,
+        ("Obstacle", "Avoid", "Dirty Area"): -2,
+        ("Clean Area", "Return", "Task Complete"): 20
+    },
+
+    "discount_factor": 0.9
+}
+
+# Display the MDP
+for key, value in mdp.items():
+    print(f"\n{key.upper()}:")
+    print(value)
+print("Name : S.Naresh      ")
+print("Register Number:212224240101  ")
 ```
 ---
 ## Output
 
-Write your Python output here.
+<img width="1024" height="337" alt="image" src="https://github.com/user-attachments/assets/4fbd68b5-e71f-4820-be00-83d443413a0e" />
+
 
 
 ---
 
 ## Result
 
-Write your result here.
 
+The smart vacuum cleaning robot problem was successfully represented as a Markov Decision Process (MDP) by defining its states, actions, transition probabilities, reward function, and discount factor. The MDP was implemented using Python dictionaries, enabling the robot to make optimal sequential decisions for efficient cleaning while avoiding obstacles and completing the task successfully.
 
 
 ---
